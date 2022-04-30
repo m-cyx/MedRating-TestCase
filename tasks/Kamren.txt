@@ -1,5 +1,5 @@
 Отчёт для Keebler LLC.
-Chelsey Dietrich <Lucio_Hettinger@annie.ca> тут дата
+Chelsey Dietrich <Lucio_Hettinger@annie.ca> 30.04.2022 20:09
 Всего задач: 20
 
 Завершённые задачи (12):

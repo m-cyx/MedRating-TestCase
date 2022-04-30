@@ -1,28 +1,27 @@
 from datetime import datetime
 import os
+import time
 import requests
 # задокументирвоать функции
+# обратить внимание на двоеточие в названии. на линуксе должно быть ок
+
 
 def read_from_api(path):
-    """Чтение из API типа 'json' и возвращение данных типа 'dict'
-    :param path: путь до файла типа 'json'
-    :return response_json: - json файл
-    """
     response_json = requests.get(path).json()
     # сюда добавить проверку, что всё окей, выкинуть исключение если не ок
     return response_json
 
-# проверяет и режет строки
+
 def cut_str(str):
+    # проверяет и режет строки
     if len(str) > 48:
         return str[:48] + '...\n'
     return str + '\n'
 
-# будет возвращать словарь в котором два ключа completed и not_completed значения - айдишники задач (или сами задачи??)
-
 
 def get_todos_by_user_id(user_id, todos):
-    # переделать, чтобы возвращала тудушки 
+    # будет возвращать словарь в котором два ключа completed и not_completed значения - айдишники задач (или сами задачи??)
+    # переделать, чтобы возвращала тудушки
     # создать отдельно функцию, которая сортирует и пакует в словарь при этом обрезая строки
     user_todos_dict = {}
     completed = []
@@ -43,10 +42,10 @@ def get_todos_by_user_id(user_id, todos):
 
 def create_report(user, todos):
     # мб написать гет юзер дата бай юзер айди, а основной аргумент будет юзер айди
-    user_id = user.get("id")
+    # user_id = user.get("id")
     creation_date = datetime.now().strftime('%d.%m.%Y %H:%M')
 
-    user_todos_dict = get_todos_by_user_id(user_id, todos)
+    user_todos_dict = get_todos_by_user_id(user.get("id"), todos)
     completed_todos = user_todos_dict.get("completed_todos")
     not_completed_todos = user_todos_dict.get("not_completed_todos")
 
@@ -54,7 +53,7 @@ def create_report(user, todos):
               f"{user.get('name')} <{user.get('email')}> {creation_date}\n"
               f"Всего задач: {len(completed_todos) + len(not_completed_todos)}\n\n"
               f"Завершённые задачи ({len(completed_todos)}):\n")
-
+    #   f"{user_todos_dict['completed_todos']} ")
     # вынести в отдельный метод
     for todo in completed_todos:
         report += todo
@@ -66,26 +65,43 @@ def create_report(user, todos):
 
     return report
 
-def make_file(report, username):
-    # вернуть лучше репорт, а запись вынести в отдельную функию, там и работу с файлами сделать
-    file = open(f"{username}.txt", "w", encoding='utf-8')
-    # добавить кодировку ютф8
-    file.write(report)
+
+def get_user_filename(user):
+    filename = f"{user.get('username')}"
+    if os.path.exists(f"tasks/{filename}.txt"):
+        created_at = os.path.getmtime(f"tasks/{filename}.txt")
+        created_at = datetime.strptime(
+            time.ctime(created_at), "%a %b %d %H:%M:%S %Y")
+        os.renames(f"tasks/{filename}.txt",
+                   f"tasks/old_{filename}_{created_at.strftime('%Y-%m-%dT%H-%M')}.txt")
+    return filename
+
+
+def mkdir(directory_name):
+    try:
+        if not os.path.exists(directory_name):
+            os.mkdir(directory_name)
+        return True
+    except OSError:
+        print("эрор!")
+        return False
+
+
+def write(users, todos):
+    if mkdir("tasks"):
+        for user in users:
+            user_file = open(
+                f"tasks/{get_user_filename(user)}.txt", "w", encoding='utf-8')
+            record = create_report(user, todos)
+            user_file.write(record)
+
 
 def main():
-    # список задач из 'todos' (элементы списка типа 'dict')
     todos = read_from_api("https://json.medrating.org/todos")
-    # список пользователей из 'users' (элементы списка типа 'dict')
     users = read_from_api("https://json.medrating.org/users")
 
-    if not os.path.isdir("tasks"):
-        os.mkdir("tasks")
-    os.chdir("tasks")
+    write(users, todos)
 
-    for user in users:
-        # тут беда с todos, сто раз передаётся куда попало
-        report = create_report(user, todos)
-        make_file(report, user.get("username"))
 
 if __name__ == '__main__':
     main()

@@ -1,8 +1,8 @@
-Отчёт для Yost and Sons.
-Glenna Reichert <Chaim_McDermott@dana.io> тут дата
-Всего задач: 20
+РћС‚С‡С‘С‚ РґР»СЏ Yost and Sons.
+Glenna Reichert <Chaim_McDermott@dana.io> С‚СѓС‚ РґР°С‚Р°
+Р’СЃРµРіРѕ Р·Р°РґР°С‡: 20
 
-Завершённые задачи (8):
+Р—Р°РІРµСЂС€С‘РЅРЅС‹Рµ Р·Р°РґР°С‡Рё (8):
 ex hic consequuntur earum omnis alias ut occaecati culpa
 omnis laboriosam molestias animi sunt dolore
 ea odio perferendis officiis
@@ -12,7 +12,7 @@ nesciunt itaque commodi tempore
 omnis consequuntur cupiditate impedit itaque ipsam quo
 debitis nisi et dolorem repellat et
 
-Оставшиеся задачи: (12)
+РћСЃС‚Р°РІС€РёРµСЃСЏ Р·Р°РґР°С‡Рё: (12)
 natus corrupti maxime laudantium et voluptatem laboriosam odit
 reprehenderit quos aut aut consequatur est sed
 fugiat perferendis sed aut quidem

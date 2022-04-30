@@ -1,8 +1,8 @@
-Отчёт для Robel-Corkery.
-Patricia Lebsack <Julianne.OConner@kory.org> тут дата
-Всего задач: 20
+РћС‚С‡С‘С‚ РґР»СЏ Robel-Corkery.
+Patricia Lebsack <Julianne.OConner@kory.org> С‚СѓС‚ РґР°С‚Р°
+Р’СЃРµРіРѕ Р·Р°РґР°С‡: 20
 
-Завершённые задачи (6):
+Р—Р°РІРµСЂС€С‘РЅРЅС‹Рµ Р·Р°РґР°С‡Рё (6):
 odit optio omnis qui sunt
 doloremque aut dolores quidem fuga qui nulla
 sint amet quia totam corporis qui exercitationem commodi
@@ -10,7 +10,7 @@ sequi dolorem sed
 eum ipsa maxime ut
 tempore molestias dolores rerum sequi voluptates ipsum consequatur
 
-Оставшиеся задачи: (14)
+РћСЃС‚Р°РІС€РёРµСЃСЏ Р·Р°РґР°С‡Рё: (14)
 et placeat et tempore aspernatur sint numquam
 voluptas consequatur qui ut quia magnam nemo esse
 fugiat pariatur ratione ut asperiores necessitatibus magni

@@ -1,8 +1,8 @@
-Отчёт для Johns Group.
-Kurtis Weissnat <Telly.Hoeger@billy.biz> тут дата
-Всего задач: 20
+РћС‚С‡С‘С‚ РґР»СЏ Johns Group.
+Kurtis Weissnat <Telly.Hoeger@billy.biz> С‚СѓС‚ РґР°С‚Р°
+Р’СЃРµРіРѕ Р·Р°РґР°С‡: 20
 
-Завершённые задачи (9):
+Р—Р°РІРµСЂС€С‘РЅРЅС‹Рµ Р·Р°РґР°С‡Рё (9):
 inventore aut nihil minima laudantium hic qui omnis
 provident aut nobis culpa
 ut asperiores perspiciatis veniam ipsum rerum saepe
@@ -13,7 +13,7 @@ et labore eos enim rerum consequatur sunt
 placeat minima consequatur rem qui ut
 aut consectetur in blanditiis deserunt quia sed laboriosam
 
-Оставшиеся задачи: (11)
+РћСЃС‚Р°РІС€РёРµСЃСЏ Р·Р°РґР°С‡Рё: (11)
 esse et quis iste est earum aut impedit
 qui consectetur id
 aut quasi autem iste tempore illum possimus

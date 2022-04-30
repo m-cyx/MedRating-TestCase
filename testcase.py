@@ -1,3 +1,4 @@
+import os
 import requests
 # задокументирвоать функции
 
@@ -19,10 +20,10 @@ def get_todos_by_user_id(user_id):
     not_completed = []
     for todo in todos:
         if todo.get("userId") == user_id:
-            if todo.get("completed") is True:
+            if todo.get("completed"):
                 # хранить тут туду айди, чтобы по нему потом брать тудушку
                 completed.append(todo.get("title"))
-            elif todo.get("completed") is False:
+            else:
                 not_completed.append(todo.get("title"))
 
     user_todos_dict['completed_todos'] = completed
@@ -30,7 +31,6 @@ def get_todos_by_user_id(user_id):
 
     return user_todos_dict
 
-# должна принимать юзера и таски юзера
 
 
 def report_maker(user):
@@ -60,8 +60,13 @@ def report_maker(user):
 
     for todo in not_completed_todos:
         report = report + todo + "\n"
+
+    return report
+    
+
+def make_file(report, username):
     # вернуть лучше репорт, а запись вынести в отдельную функию, там и работу с файлами сделать
-    file = open(f"{username}.txt", "w")
+    file = open(f"{username}.txt", "w", encoding='utf-8')
     # добавить кодировку ютф8
     file.write(report)
 
@@ -72,6 +77,12 @@ todos = read_from_api("https://json.medrating.org/todos")
 users = read_from_api("https://json.medrating.org/users")
 
 
+if not os.path.isdir("tasks"):
+    os.mkdir("tasks")
+    # переходим в каталог "tasks"
+os.chdir("tasks")
+
 for user in users:
 
-    report_maker(user)
+    report = report_maker(user)
+    make_file(report, user.get("username"))

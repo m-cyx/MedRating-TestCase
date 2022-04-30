@@ -1,18 +1,14 @@
-# как сейчас
-def get_todos_by_user_id(user_id):
-    return user_todos_dict
+# Функция для обрезки строк и добавления многоточия.
+def cut_str(str):
+    if len(str) > 48:
+        return str[:48] + '...\n'
+    return str + '\n'
 
-def report_maker(username, company_name, name, email, creation_date, user_todos_dict):
-    return report
+a = '11111111111111111111'
+b = '1111111111111111111111111111111111111111111111111'
 
+c = truncate_str(a)
+d = truncate_str(b)
 
+print(c,d)
 
-
-# как хочу сделать
-def get_todos_by_user_id(user_id):
-    # тело
-    return user_todos_dict
-
-def report_maker(user_id):
-    get_todos_by_user_id(user_id)
-    return report

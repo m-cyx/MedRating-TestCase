@@ -12,7 +12,12 @@ def read_from_api(path):
     # сюда добавить проверку, что всё окей, выкинуть исключение если не ок
     return response_json
 
-
+# проверяет и режет строки
+def cut_str(str):
+    if len(str) > 48:
+        return str[:48] + '...\n'
+    return str + '\n'
+    
 # будет возвращать словарь в котором два ключа completed и not_completed значения - айдишники задач (или сами задачи??)
 def get_todos_by_user_id(user_id):
     user_todos_dict = {}
@@ -22,9 +27,9 @@ def get_todos_by_user_id(user_id):
         if todo.get("userId") == user_id:
             if todo.get("completed"):
                 # хранить тут туду айди, чтобы по нему потом брать тудушку
-                completed.append(todo.get("title"))
+                completed.append(cut_str(todo.get("title")))
             else:
-                not_completed.append(todo.get("title"))
+                not_completed.append(cut_str(todo.get("title")))
 
     user_todos_dict['completed_todos'] = completed
     user_todos_dict['not_completed_todos'] = not_completed
@@ -54,12 +59,12 @@ def report_maker(user):
 
     # вынести в отдельный метод
     for todo in completed_todos:
-        report = report + todo + "\n"
+        report = report + todo
 
     report = report + f"\nОставшиеся задачи: ({len(not_completed_todos)})\n"
 
     for todo in not_completed_todos:
-        report = report + todo + "\n"
+        report = report + todo
 
     return report
     

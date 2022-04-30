@@ -19,7 +19,11 @@ def cut_str(str):
     return str + '\n'
 
 # будет возвращать словарь в котором два ключа completed и not_completed значения - айдишники задач (или сами задачи??)
-def get_todos_by_user_id(user_id):
+
+
+def get_todos_by_user_id(user_id, todos):
+    # переделать, чтобы возвращала тудушки 
+    # создать отдельно функцию, которая сортирует и пакует в словарь при этом обрезая строки
     user_todos_dict = {}
     completed = []
     not_completed = []
@@ -36,12 +40,13 @@ def get_todos_by_user_id(user_id):
 
     return user_todos_dict
 
-def create_report(user):
+
+def create_report(user, todos):
     # мб написать гет юзер дата бай юзер айди, а основной аргумент будет юзер айди
     user_id = user.get("id")
     creation_date = datetime.now().strftime('%d.%m.%Y %H:%M')
 
-    user_todos_dict = get_todos_by_user_id(user_id)
+    user_todos_dict = get_todos_by_user_id(user_id, todos)
     completed_todos = user_todos_dict.get("completed_todos")
     not_completed_todos = user_todos_dict.get("not_completed_todos")
 
@@ -67,15 +72,20 @@ def make_file(report, username):
     # добавить кодировку ютф8
     file.write(report)
 
-# список задач из 'todos' (элементы списка типа 'dict')
-todos = read_from_api("https://json.medrating.org/todos")
-# список пользователей из 'users' (элементы списка типа 'dict')
-users = read_from_api("https://json.medrating.org/users")
+def main():
+    # список задач из 'todos' (элементы списка типа 'dict')
+    todos = read_from_api("https://json.medrating.org/todos")
+    # список пользователей из 'users' (элементы списка типа 'dict')
+    users = read_from_api("https://json.medrating.org/users")
 
-if not os.path.isdir("tasks"):
-    os.mkdir("tasks")
-os.chdir("tasks")
+    if not os.path.isdir("tasks"):
+        os.mkdir("tasks")
+    os.chdir("tasks")
 
-for user in users:
-    report = create_report(user)
-    make_file(report, user.get("username"))
+    for user in users:
+        # тут беда с todos, сто раз передаётся куда попало
+        report = create_report(user, todos)
+        make_file(report, user.get("username"))
+
+if __name__ == '__main__':
+    main()

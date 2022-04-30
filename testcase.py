@@ -36,7 +36,7 @@ def get_todos_by_user_id(user_id):
 
     return user_todos_dict
 
-def report_maker(user):
+def create_report(user):
     # мб написать гет юзер дата бай юзер айди, а основной аргумент будет юзер айди
     user_id = user.get("id")
     creation_date = datetime.now().strftime('%d.%m.%Y %H:%M')
@@ -77,5 +77,5 @@ if not os.path.isdir("tasks"):
 os.chdir("tasks")
 
 for user in users:
-    report = report_maker(user)
+    report = create_report(user)
     make_file(report, user.get("username"))

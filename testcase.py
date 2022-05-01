@@ -37,7 +37,6 @@ def get_user_tasks(user_id, todos):
                 user_tasks['uncompleted_tasks'] += 1
                 user_tasks['uncompleted_tasks_titles'] += \
                     cut_title(task.get("title"))
-
     return user_tasks
 
 
@@ -51,20 +50,19 @@ def create_report(user, todos):
               f"{user_tasks['completed_tasks_titles']} "
               f"\nОставшиеся задачи ({user_tasks.get('uncompleted_tasks')}):\n"
               f"{user_tasks.get('uncompleted_tasks_titles')} ")
-
     return report
 
 
-def get_user_filename(user):
-    # укоротить
-    filename = f"{user.get('username')}"
-    if os.path.exists(f"tasks/{filename}.txt"):
-        created_at = os.path.getmtime(f"tasks/{filename}.txt")
-        created_at = datetime.strptime(
-            time.ctime(created_at), "%a %b %d %H:%M:%S %Y")
-        os.renames(f"tasks/{filename}.txt",
-                   f"tasks/old_{filename}_{created_at.strftime('%Y-%m-%dT%H-%M')}.txt")
-    return filename
+def get_user_file_name(user):
+    file_name = f"{user.get('username')}"
+
+    if os.path.exists(f"tasks/{file_name}.txt"):
+        crt_date = os.path.getmtime(f"tasks/{file_name}.txt")
+        crt_date = datetime.strptime(time.ctime(
+            crt_date), "%a %b %d %H:%M:%S %Y").strftime('%Y-%m-%dT%H-%M')
+        os.renames(f"tasks/{file_name}.txt",
+                   f"tasks/old_{file_name}_{crt_date}.txt")
+    return file_name
 
 
 def write_files(users, todos):
@@ -73,7 +71,7 @@ def write_files(users, todos):
 
     for user in users:
         user_file = open(
-            f"tasks/{get_user_filename(user)}.txt", "w", encoding='utf-8')
+            f"tasks/{get_user_file_name(user)}.txt", "w", encoding='utf-8')
         record = create_report(user, todos)
         user_file.write(record)
 

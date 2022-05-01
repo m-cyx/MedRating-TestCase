@@ -2,8 +2,8 @@ from datetime import datetime
 import os
 import time
 import requests
-# задокументирвоать функции
-# обратить внимание на двоеточие в названии. на линуксе должно быть ок
+# задокументирвоать функции на английском
+# обратить внимание на двоеточие в названии старых файлов. на линуксе должно быть ок
 
 
 def read_from_api(path):
@@ -12,61 +12,48 @@ def read_from_api(path):
     return response_json
 
 
-def cut_str(str):
+def cut_title(title):
     # проверяет и режет строки
-    if len(str) > 48:
-        return str[:48] + '...\n'
-    return str + '\n'
+    if len(title) > 48:
+        return title[:48] + '...\n'
+    return title + '\n'
 
 
-def get_todos_by_user_id(user_id, todos):
-    # будет возвращать словарь в котором два ключа completed и not_completed значения - айдишники задач (или сами задачи??)
-    # переделать, чтобы возвращала тудушки
-    # создать отдельно функцию, которая сортирует и пакует в словарь при этом обрезая строки
-    user_todos_dict = {}
-    completed = []
-    not_completed = []
-    for todo in todos:
-        if todo.get("userId") == user_id:
-            if todo.get("completed"):
-                # хранить тут туду айди, чтобы по нему потом брать тудушку
-                completed.append(cut_str(todo.get("title")))
+def get_user_tasks(user_id, todos):
+    user_tasks = {'total_tasks': 0, 'completed_tasks': 0, 'uncompleted_tasks': 0,
+                  'completed_tasks_titles': '', 'uncompleted_tasks_titles': ''}
+
+    for task in todos:
+        if task.get("userId") == user_id:
+            user_tasks['total_tasks'] += 1
+            if task.get("completed"):
+                user_tasks['completed_tasks'] += 1
+                user_tasks['completed_tasks_titles'] += \
+                    cut_title(task.get("title"))
             else:
-                not_completed.append(cut_str(todo.get("title")))
+                user_tasks['uncompleted_tasks'] += 1
+                user_tasks['uncompleted_tasks_titles'] += \
+                    cut_title(task.get("title"))
 
-    user_todos_dict['completed_todos'] = completed
-    user_todos_dict['not_completed_todos'] = not_completed
-
-    return user_todos_dict
+    return user_tasks
 
 
 def create_report(user, todos):
-    # мб написать гет юзер дата бай юзер айди, а основной аргумент будет юзер айди
-    # user_id = user.get("id")
     creation_date = datetime.now().strftime('%d.%m.%Y %H:%M')
-
-    user_todos_dict = get_todos_by_user_id(user.get("id"), todos)
-    completed_todos = user_todos_dict.get("completed_todos")
-    not_completed_todos = user_todos_dict.get("not_completed_todos")
-
+    user_tasks = get_user_tasks(user.get("id"), todos)
     report = (f"Отчёт для {user.get('company').get('name')}.\n"
               f"{user.get('name')} <{user.get('email')}> {creation_date}\n"
-              f"Всего задач: {len(completed_todos) + len(not_completed_todos)}\n\n"
-              f"Завершённые задачи ({len(completed_todos)}):\n")
-    #   f"{user_todos_dict['completed_todos']} ")
-    # вынести в отдельный метод
-    for todo in completed_todos:
-        report += todo
-
-    report += f"\nОставшиеся задачи: ({len(not_completed_todos)})\n"
-
-    for todo in not_completed_todos:
-        report += todo
+              f"Всего задач: {user_tasks.get('total_tasks')}\n\n"
+              f"Завершённые задачи ({user_tasks.get('completed_tasks')}):\n"
+              f"{user_tasks['completed_tasks_titles']} "
+              f"\nОставшиеся задачи ({user_tasks.get('uncompleted_tasks')}):\n"
+              f"{user_tasks.get('uncompleted_tasks_titles')} ")
 
     return report
 
 
 def get_user_filename(user):
+    # укоротить
     filename = f"{user.get('username')}"
     if os.path.exists(f"tasks/{filename}.txt"):
         created_at = os.path.getmtime(f"tasks/{filename}.txt")
@@ -77,18 +64,19 @@ def get_user_filename(user):
     return filename
 
 
-def mkdir(directory_name):
+def dir_exist(dir_name):
+    # можно сократить
     try:
-        if not os.path.exists(directory_name):
-            os.mkdir(directory_name)
+        if not os.path.exists(dir_name):
+            os.mkdir(dir_name)
         return True
     except OSError:
         print("эрор!")
         return False
 
 
-def write(users, todos):
-    if mkdir("tasks"):
+def write_files(users, todos):
+    if dir_exist("tasks"):
         for user in users:
             user_file = open(
                 f"tasks/{get_user_filename(user)}.txt", "w", encoding='utf-8')
@@ -100,7 +88,7 @@ def main():
     todos = read_from_api("https://json.medrating.org/todos")
     users = read_from_api("https://json.medrating.org/users")
 
-    write(users, todos)
+    write_files(users, todos)
 
 
 if __name__ == '__main__':

@@ -1,10 +1,8 @@
 from datetime import datetime
+from genericpath import exists, getmtime
 import os
 import time
 import requests
-# Предусмотреть крайние случаи(у пользователя нет задач, и т.п.).
-# задокументирвоать функции на английском
-# обратить внимание на двоеточие в названии старых файлов. на линуксе должно быть ок
 
 
 def read_from_api(path):
@@ -12,11 +10,10 @@ def read_from_api(path):
         response_json = requests.get(path).json()
         return response_json
     except:
-        print(f'ConnectionError failed to get data from: {path}')
+        print(f'Connection-Error failed to get data from: {path}')
 
 
 def cut_title(title):
-    # проверяет и режет строки
     if len(title) > 48:
         return title[:48] + '...\n'
     return title + '\n'
@@ -29,6 +26,7 @@ def get_user_tasks(user_id, todos):
     for task in todos:
         if task.get("userId") == user_id:
             user_tasks['total_tasks'] += 1
+
             if task.get("completed"):
                 user_tasks['completed_tasks'] += 1
                 user_tasks['completed_tasks_titles'] += \
@@ -56,8 +54,8 @@ def create_report(user, todos):
 def get_user_file_name(user):
     file_name = f"{user.get('username')}"
 
-    if os.path.exists(f"tasks/{file_name}.txt"):
-        crt_date = os.path.getmtime(f"tasks/{file_name}.txt")
+    if exists(f"tasks/{file_name}.txt"):
+        crt_date = getmtime(f"tasks/{file_name}.txt")
         crt_date = datetime.strptime(time.ctime(
             crt_date), "%a %b %d %H:%M:%S %Y").strftime('%Y-%m-%dT%H-%M')
         os.renames(f"tasks/{file_name}.txt",
@@ -66,7 +64,7 @@ def get_user_file_name(user):
 
 
 def write_files(users, todos):
-    if not os.path.exists("tasks"):
+    if not exists("tasks"):
         os.mkdir("tasks")
 
     for user in users:

@@ -2,14 +2,17 @@ from datetime import datetime
 import os
 import time
 import requests
+# Предусмотреть крайние случаи(у пользователя нет задач, и т.п.).
 # задокументирвоать функции на английском
 # обратить внимание на двоеточие в названии старых файлов. на линуксе должно быть ок
 
 
 def read_from_api(path):
-    response_json = requests.get(path).json()
-    # сюда добавить проверку, что всё окей, выкинуть исключение если не ок
-    return response_json
+    try:
+        response_json = requests.get(path).json()
+        return response_json
+    except:
+        print(f'ConnectionError failed to get data from: {path}')
 
 
 def cut_title(title):
@@ -64,31 +67,25 @@ def get_user_filename(user):
     return filename
 
 
-def dir_exist(dir_name):
-    # можно сократить
-    try:
-        if not os.path.exists(dir_name):
-            os.mkdir(dir_name)
-        return True
-    except OSError:
-        print("эрор!")
-        return False
-
-
 def write_files(users, todos):
-    if dir_exist("tasks"):
-        for user in users:
-            user_file = open(
-                f"tasks/{get_user_filename(user)}.txt", "w", encoding='utf-8')
-            record = create_report(user, todos)
-            user_file.write(record)
+    if not os.path.exists("tasks"):
+        os.mkdir("tasks")
+
+    for user in users:
+        user_file = open(
+            f"tasks/{get_user_filename(user)}.txt", "w", encoding='utf-8')
+        record = create_report(user, todos)
+        user_file.write(record)
 
 
 def main():
     todos = read_from_api("https://json.medrating.org/todos")
     users = read_from_api("https://json.medrating.org/users")
 
-    write_files(users, todos)
+    try:
+        write_files(users, todos)
+    except:
+        print('Unexpected error')
 
 
 if __name__ == '__main__':

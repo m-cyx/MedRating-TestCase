@@ -3,9 +3,19 @@ from genericpath import exists, getmtime
 import os
 import time
 import requests
-# 
+# попробовать в ооп
+# написать тесты
+# приватность методов
+# ответ апи туду в мап, где ключом будет user_id
+# один раз пробежать по ответу жсона user_id : [todolist]
+# использовать with open
+# поправить эксепты
+# код должен идти сверху вниз
+
 
 def read_from_api(path):
+    # гет реквест
+    # тоже лучше в объект
     try:
         response_json = requests.get(path).json()
         return response_json

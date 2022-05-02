@@ -8,7 +8,7 @@ def main():
     todos = get_api_data("https://json.medrating.org/todos")
     users = get_api_data("https://json.medrating.org/users")
 
-    create_files(users, todos)
+    create_files(users, todos, path_name="tasks")
 
 
 def get_api_data(path):
@@ -19,27 +19,27 @@ def get_api_data(path):
     return api_data
 
 
-def create_files(users, todos):
-    if not os.path.exists("tasks"):
-        os.mkdir("tasks")
+def create_files(users, todos, path_name):
+    if not os.path.exists(path_name):
+        os.mkdir(path_name)
 
     for user in users:
         file_name = f"{user.get('username')}"
 
-        if os.path.exists(f"tasks/{file_name}.txt"):
-            rename_file(file_name)
+        if os.path.exists(f"{path_name}/{file_name}.txt"):
+            rename_file(file_name, path_name)
 
-        with open(f"tasks/{file_name}.txt", "w", encoding="utf-8") as user_file:
+        with open(f"{path_name}/{file_name}.txt", "w", encoding="utf-8") as user_file:
             report = create_report(user, todos)
             user_file.write(report)
 
 
-def rename_file(file_name):
-    creation_date = os.path.getmtime(f"tasks/{file_name}.txt")
+def rename_file(file_name, path_name):
+    creation_date = os.path.getmtime(f"{path_name}/{file_name}.txt")
     creation_date = datetime.strptime(time.ctime(
-        creation_date), "%a %b %d %H:%M:%S %Y").strftime('%Y-%m-%dT%H-%M')
-    os.renames(f"tasks/{file_name}.txt",
-               f"tasks/old_{file_name}_{creation_date}.txt")
+        creation_date), "%a %b %d %H:%M:%S %Y").strftime('%Y-%m-%dT%H:%M')
+    os.renames(f"{path_name}/{file_name}.txt",
+               f"{path_name}/old_{file_name}_{creation_date}.txt")
 
 
 def create_report(user, todos):
